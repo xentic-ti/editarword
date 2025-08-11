@@ -1,0 +1,13 @@
+{
+  "name": "SPFx Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:16-bullseye",
+  "postCreateCommand": "npm install -g gulp-cli yo @microsoft/generator-sharepoint && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}
