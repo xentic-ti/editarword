@@ -81,6 +81,48 @@ const EditarWord: React.FC<IEditarWordProps> = ({ context, folderServerRelativeU
     return ser.serializeToString(xml);
   };
 
+//  const W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+
+function setDocTitle(docXmlString: string, newTitle: string, tagOrAlias = 'TituloDocumento') {
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(docXmlString, 'application/xml');
+
+  // Busca el SDT por tag o alias
+  const sdts = Array.from(xml.getElementsByTagNameNS(W_NS, 'sdt'));
+  for (const sdt of sdts) {
+    const pr = sdt.getElementsByTagNameNS(W_NS, 'sdtPr')[0];
+    if (!pr) continue;
+
+    const tagEl = pr.getElementsByTagNameNS(W_NS, 'tag')[0];
+    const aliasEl = pr.getElementsByTagNameNS(W_NS, 'alias')[0];
+
+    const valTag =
+      (tagEl && (tagEl.getAttributeNS(W_NS, 'val') || tagEl.getAttribute('w:val') || tagEl.getAttribute('val'))) ||
+      (aliasEl && (aliasEl.getAttributeNS(W_NS, 'val') || aliasEl.getAttribute('w:val') || aliasEl.getAttribute('val')));
+
+    if (valTag === tagOrAlias) {
+      const content = sdt.getElementsByTagNameNS(W_NS, 'sdtContent')[0] || sdt;
+      let t = content.getElementsByTagNameNS(W_NS, 't')[0];
+
+      if (!t) {
+        // crea estructura mínima <w:p><w:r><w:t/>
+        const p = xml.createElementNS(W_NS, 'w:p');
+        const r = xml.createElementNS(W_NS, 'w:r');
+        t = xml.createElementNS(W_NS, 'w:t');
+        r.appendChild(t); p.appendChild(r); content.appendChild(p);
+      }
+
+      t.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve');
+      t.textContent = newTitle;
+
+      return new XMLSerializer().serializeToString(xml);
+    }
+  }
+
+  throw new Error('No se encontró el Content Control con tag/alias "TituloDocumento".');
+}
+
+
   // 4) Guardar archivo en SharePoint (nuevo nombre)
 // Sube un nuevo .docx a la carpeta indicada. Devuelve la URL server-relative del nuevo archivo.
 const uploadNewFile = async (
@@ -151,16 +193,21 @@ const uploadNewFile = async (
     // b) Abrir ZIP
     const zip = new PizZip(ab);
 
-    // c) Leer word/document.xml
-    const docXml = zip.file('word/document.xml')?.asText();
-    if (!docXml) throw new Error('No se encontró word/document.xml');
+    // c) Leer document.xml
+const docXml = zip.file('word/document.xml')?.asText();
+if (!docXml) throw new Error('No se encontró word/document.xml');
 
-    // d) Agregar la fila auto
-    const updatedXml = appendRowToDocXml(docXml, {
-      id: '1233',
-      autor: 'Pedro',
-      fecha: '12/08/2025'
-    });
+// d) Editar: 1) agregar fila + 2) actualizar título
+let updatedXml = appendRowToDocXml(docXml, { id: '1233', autor: 'Pedro', fecha: '12/08/2025' });
+updatedXml = setDocTitle(updatedXml, 'Título actualizado desde SPFx', 'TituloDocumento');
+
+// d2) Actualizar el Título
+const nuevoTitulo = 'Título actualizado desde SPFx';
+updatedXml = setDocTitle(updatedXml, nuevoTitulo, 'TituloDocumento');
+
+// e) Reemplazar XML y seguir como ya lo tienes…
+zip.file('word/document.xml', updatedXml);
+
 
     // e) Reemplazar XML
     zip.file('word/document.xml', updatedXml);
