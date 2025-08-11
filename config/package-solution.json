@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "editarword-client-side-solution",
+    "id": "7df54bc3-4c61-4eb1-8f5f-62ab80e55f40",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "editarword description"
+      },
+      "longDescription": {
+        "default": "editarword description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "editarword Feature",
+        "description": "The feature that activates elements of the editarword solution.",
+        "id": "47f72e44-dfe1-4e83-9be3-483ca6b4f0ca",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/editarword.sppkg"
+  }
+}

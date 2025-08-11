@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "editar-word-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/editarWord/EditarWordWebPart.js",
+          "manifest": "./src/webparts/editarWord/EditarWordWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "EditarWordWebPartStrings": "lib/webparts/editarWord/loc/{locale}.js"
+  }
+}

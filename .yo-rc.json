@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "16.19.1",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.12.0"
+    },
+    "version": "1.18.2",
+    "libraryName": "editarword",
+    "libraryId": "7df54bc3-4c61-4eb1-8f5f-62ab80e55f40",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "editarword",
+    "solutionShortDescription": "editarword description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
